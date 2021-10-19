@@ -2,9 +2,6 @@ const axios = require("axios");
 const options = {
   headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}
 }
-const cabecalho = {}
-
-var perguntas = {}
 function soma(entrada,head){
   resultado = entrada['soma']['entrada']['a'] + entrada['soma']['entrada']['b']
   console.log('soma: ',resultado)
@@ -101,64 +98,55 @@ function somaValores(entrada,head){
     v = parseInt(resultado[k])
     r +=v
   }
-  console.log('soma valores: ',resultado,r)
+  console.log('soma valores: ',r)
   axios
     .post('https://tecweb-js.insper-comp.com.br/exercicio/soma-valores',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
   return r
 }
 function nEsimoPrimo(entrada,head){
-  resultado = entrada['n-esimo-primo']['entrada']['objeto']
-  index = 0
-  r=0
-  for (k in resultado) {
-    v = parseInt(resultado[k])
-    r +=v
+  resultado = entrada['n-esimo-primo']['entrada']['n']
+  console.log('n esimo: ',resultado)
+  i = 2
+  primo = []
+  while (primo.length < parseInt(resultado)){
+    if (((i % 2 != 0) && (i % 3 != 0) && (i % 5 != 0) && (i % 7 != 0))|| (( i == 2 )|| (i == 3) || (i == 5) || (i == 7))){
+      primo.push(i)
+      for (p in primo){
+        if (i % primo[p] == 0 && i != primo[p]) {
+          primo.length = primo.length - 1
+          break
+        }
+      }
+    }
+    i += 1
   }
-  console.log('soma valores: ',resultado,r)
+  r = String(primo[primo.length-1])
+  console.log(primo)
+  console.log('primo ultimo = ', r)
   axios
     .post('https://tecweb-js.insper-comp.com.br/exercicio/n-esimo-primo',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
   return r
 }
 function maiorPrefixoComum(entrada,head){
-  resultado = entrada['n-esimo-primo']['entrada']['objeto']
+  resultado = entrada['maior-prefixo-comum']['entrada']['strings']
   index = 0
   r=0
-  for (k in resultado) {
-    v = parseInt(resultado[k])
-    r +=v
-  }
+  prefixo = ''
+  
   console.log('soma valores: ',resultado,r)
   axios
-    .post('https://tecweb-js.insper-comp.com.br/exercicio/n-esimo-primo',{ "resposta": r}, head)
+    .post('https://tecweb-js.insper-comp.com.br/exercicio/maior-prefixo-comum',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
   return r
 }
 function somaSegundoMaiorMenor(entrada,head){
   resultado = entrada['soma-segundo-maior-e-menor-numeros']['entrada']['numeros']
-  
-  maior = 0
-  segundoMaior = 0
-  menor = 0
-  segundoMenor = 0
-
-  for (n in resultado) {
-    console.log(resultado[n])
-    if (resultado[n] > maior) {
-      maior = resultado[n]
-    }
-    else if (resultado[n] <= maior && resultado[n] > segundoMaior) {
-      segundoMaior = resultado[n]
-    }
-    else if (resultado[n] < menor) {
-      menor = resultado[n]
-    }
-    else if (resultado[n] > menor && resultado[n] < segundoMenor) {
-      segundoMenor = resultado[n]
-    }
-  }
-  r = segundoMaior + segundoMenor
+  r = resultado.sort((a, b) => a-b);
+  segundoMaior = r[r.length-2]
+  segundoMenor = r[1]
+  r = segundoMenor+segundoMaior
   console.log('Segundo maior = ', segundoMaior)
   console.log('SEGUNDO MENOR = ', segundoMenor)
   console.log('Total =  ',r)
@@ -174,12 +162,10 @@ function contaPalindromos(entrada,head){
     tamanho = resultado[k].length
     palavra = resultado[k]
     inversa = resultado[k].split("").reverse().join("")
-    console.log(palavra)
     if (palavra == inversa ){
       r += 1
     }
   }
-  console.log('palindromos: ',r)
   axios
     .post('https://tecweb-js.insper-comp.com.br/exercicio/conta-palindromos',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
@@ -187,43 +173,37 @@ function contaPalindromos(entrada,head){
 }
 function somaStringsInts(entrada,head){
   resultado = entrada['soma-de-strings-de-ints']['entrada']['strings']
-  console.log(resultado)
-  r = 0
-  for (s in resultado) {
-    r += parseInt(resultado[s])
-  }
-  console.log(r)
+  result = resultado.map((n) => parseInt(n))
+  r = result.reduce((a,b) => a+b, 0)
+  console.log('SOMA STRINGS INTS = ', r)
   axios
     .post('https://tecweb-js.insper-comp.com.br/exercicio/soma-de-strings-de-ints',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
   return r
 }
-function somaRequisicoes(entrada,head){
-  resultado = entrada['soma-com-requisicoes']['entrada']['objeto']
-  index = 0
-  r=0
-  for (k in resultado) {
-    v = parseInt(resultado[k])
-    r +=v
+
+async function somaRequisicoes(entrada,head) {
+  resultado = entrada['soma-com-requisicoes']['entrada']['endpoints']
+  total = 0
+  for (i in resultado){
+    promessa = axios.get(resultado[i],head).then((response) => {console.log(response.data), (total += parseInt((response.data)))})
+    r = await promessa
   }
-  console.log('soma valores: ',resultado,r)
   axios
-    .post('https://tecweb-js.insper-comp.com.br/exercicio/soma-com-requisicoes',{ "resposta": r}, head)
+    .post('https://tecweb-js.insper-comp.com.br/exercicio/soma-com-requisicoes',{ "resposta": total}, head)
     .then((response)=> console.log(response.data))
   return r
 }
-function cacaTesouro(entrada,head){
-  resultado = entrada['caca-ao-tesouro']['entrada']['objeto']
-  index = 0
-  r=0
-  for (k in resultado) {
-    v = parseInt(resultado[k])
-    r +=v
-  }
-  console.log('soma valores: ',resultado,r)
+async function cacaTesouro(entrada,head){
+  resultado = entrada['caca-ao-tesouro']['entrada']['inicio']
+  console.log('caça tesouro: ',resultado)
+  total = 0
+  promessa = axios.get(resultado,head).then((response) => {console.log(response.data)})
+  r = await promessa
   axios
-    .post('https://tecweb-js.insper-comp.com.br/exercicio/caca-ao-tesouro',{ "resposta": r}, head)
-    .then((response)=> console.log(response.data))
+    .post('https://tecweb-js.insper-comp.com.br/exercicio/caca-ao-tesouro',{ "resposta": total}, head)
+    .then((response)=> console.log(response.data));
+    
   return r
 }
 function exercicios(accessToken){
@@ -242,9 +222,13 @@ function exercicios(accessToken){
                           mru(response.data, exercicio),
                           inverteString(response.data, exercicio),
                           somaValores(response.data, exercicio),
-                          somaSegundoMaiorMenor(response.data, exercicio),
                           somaStringsInts(response.data, exercicio),
-                          contaPalindromos(response.data, exercicio)});
+                          contaPalindromos(response.data, exercicio),
+                          somaSegundoMaiorMenor(response.data, exercicio),
+                          nEsimoPrimo(response.data, exercicio),
+                          maiorPrefixoComum(response.data, exercicio),
+                          somaRequisicoes(response.data, exercicio)
+                          });
   perguntas = exercicio
   return exercicio
 }
