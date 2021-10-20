@@ -16,7 +16,7 @@
   - [x] Inverte a string
   - [x] Soma valores
   - [x] N-esimo número primo
-  - [ ] Maior prefixo comum
+  - [x] Maior prefixo comum
   - [x] Soma segundo maior e menor valor
   - [x] Conta palíndromos
   - [x] Soma de strings de inteiros

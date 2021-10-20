@@ -131,11 +131,35 @@ function nEsimoPrimo(entrada,head){
 }
 function maiorPrefixoComum(entrada,head){
   resultado = entrada['maior-prefixo-comum']['entrada']['strings']
-  index = 0
-  r=0
-  prefixo = ''
+  primeiro = resultado[0]
+  lista = []
+  i = 0
+  n = 0
+  palavra = ''
+  while (i < resultado.length-1) {
+    if (resultado[i][n] == resultado[i+1][n]){
+      palavra+=resultado[i][n]
+      n+=1
+      console.log('hereee', resultado[i][n], resultado[i+1][n])
+    }
+    else{
+      lista.push(palavra)
+      palavra=''
+      i+=1
+      n = 0
+    }
+  }  
+  lista2 = lista.filter((n) => n.length > 1)
+  lista3 = lista2.sort((a,b) => b.length - a.length)
+  console.log('listaaa: ', lista3)
+  if (lista3.length == 0 ){
+    r = 0
+  }
+  else {
+    r=lista3[0]
+  }
   
-  console.log('soma valores: ',resultado,r)
+  console.log('Prefixos: ',resultado)
   axios
     .post('https://tecweb-js.insper-comp.com.br/exercicio/maior-prefixo-comum',{ "resposta": r}, head)
     .then((response)=> console.log(response.data))
