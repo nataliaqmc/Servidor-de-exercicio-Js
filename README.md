@@ -21,5 +21,5 @@
   - [x] Conta palíndromos
   - [x] Soma de strings de inteiros
   - [x] Soma com requisições
-  - [ ] Caça ao tesouro
+  - [x] Caça ao tesouro
 

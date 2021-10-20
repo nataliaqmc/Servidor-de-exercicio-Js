@@ -220,39 +220,53 @@ async function somaRequisicoes(entrada,head) {
 }
 async function cacaTesouro(entrada,head){
   resultado = entrada['caca-ao-tesouro']['entrada']['inicio']
-  console.log('caça tesouro: ',resultado)
-  total = 0
-  promessa = axios.get(resultado,head).then((response) => {console.log(response.data)})
-  r = await promessa
+  link = ''
+  promessa = axios.get(resultado,head).then((response) => {console.log(response.data), link = response.data})
+  r1 = await promessa
+  console.log('r',link)
+  x = true
+  resposta = null
+  while (x == true){
+    promessa = axios.get(link,head).then((response) => {console.log(response.data), link = response.data})
+    r = await promessa
+    if (link[0] != 'h'){
+      resposta = parseInt(link)
+      x = false
+    }
+
+  }
   axios
-    .post('https://tecweb-js.insper-comp.com.br/exercicio/caca-ao-tesouro',{ "resposta": total}, head)
+    .post('https://tecweb-js.insper-comp.com.br/exercicio/caca-ao-tesouro',{ "resposta": resposta}, head)
     .then((response)=> console.log(response.data));
     
   return r
 }
-function exercicios(accessToken){
+async function exercicios(accessToken){
   const exercicio = {
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': ('Bearer '+accessToken)}
   };
-  axios
-    .get('https://tecweb-js.insper-comp.com.br/exercicio', exercicio)
-    .then((response) => {console.log(response.data), 
-                          soma(response.data, exercicio),
-                          tamanhoString(response.data, exercicio),
-                          nomeUsuario(response.data, exercicio),
-                          jacaWars(response.data, exercicio),
-                          anoBissexto(response.data, exercicio),
-                          volumePizza(response.data, exercicio),
-                          mru(response.data, exercicio),
-                          inverteString(response.data, exercicio),
-                          somaValores(response.data, exercicio),
-                          somaStringsInts(response.data, exercicio),
-                          contaPalindromos(response.data, exercicio),
-                          somaSegundoMaiorMenor(response.data, exercicio),
-                          nEsimoPrimo(response.data, exercicio),
-                          maiorPrefixoComum(response.data, exercicio),
-                          somaRequisicoes(response.data, exercicio)
-                          });
+  dado = null
+  pegando = axios.get('https://tecweb-js.insper-comp.com.br/exercicio', exercicio).then((response) => {console.log(response.data), dado=response.data});
+  d = await pegando
+  soma(dado, exercicio)
+  tamanhoString(dado, exercicio)
+  nomeUsuario(dado, exercicio)
+  jacaWars(dado, exercicio)
+  anoBissexto(dado, exercicio)
+  volumePizza(dado, exercicio)
+  mru(dado, exercicio)
+  inverteString(dado, exercicio)
+  somaValores(dado, exercicio)
+  somaStringsInts(dado, exercicio)
+  contaPalindromos(dado, exercicio)
+  somaSegundoMaiorMenor(dado, exercicio)
+  nEsimoPrimo(dado, exercicio)
+  maiorPrefixoComum(dado, exercicio)
+  promessa = somaRequisicoes(dado, exercicio)
+  r = await promessa
+  pro = cacaTesouro(dado, exercicio)
+  re = await pro
+                        
   perguntas = exercicio
   return exercicio
 }
